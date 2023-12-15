@@ -1,11 +1,11 @@
 {
-  "name": "dep-force",
+  "name": "up-force",
   "description": "",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "dep-force": "bin/main.js"
+    "up-force": "bin/main.js"
   },
   "scripts": {
     "dev": "node --loader ts-node/esm ./src/main.ts",

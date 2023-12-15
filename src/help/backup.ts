@@ -14,7 +14,7 @@ export const createBackup = (pkgFile: string, pkg: Package, logger: Logger) => {
   const format = date.toISOString().replace(/:|-|\./gi, "");
   const backupFile = pkgFile.replace(
     "package.json",
-    `.dep-force/${format}.json`
+    `.up-force/${format}.json`
   );
   const dir = dirname(backupFile);
   if (!existsSync(dir)) {

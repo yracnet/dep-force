@@ -1,17 +1,29 @@
-import { program, Option } from "commander";
+import { program } from "commander";
 import { applyAction } from "./action/apply";
-//import { version, name, description } from "../package.json";
+import { version, name, description } from "../package.json";
 
-//program.name(name).version(version).description(description);
+program.name(name).version(version).description(description);
 
 //Apply
 program
   .command("apply")
-  .description("Apply the upgrade dependencies")
-  .option("-m, --manager <manager>", "Manager Tool", "yarn")
-  .option("-o, --outFile <outFile>", "Output File", "")
-  .option("-s, --scope <scope>", "Scope Update [dep, dev, peer, all]", "dep")
-  .option("-d, --directory <directory>", "Directory", process.cwd())
+  .description("Apply the upgrade for dependencies.")
+  .option(
+    "-m, --manager <manager>",
+    "Specify the package manager tool (e.g., 'yarn').",
+    "yarn"
+  )
+  .option(
+    "-o, --outFile <outFile>",
+    "Specify the output file for logging (optional).",
+    ""
+  )
+  .option(
+    "-d, --directory <directory>",
+    "Specify the target directory (default: current working directory).",
+    process.cwd()
+  )
+  // .option("-s, --scope <scope>", "Scope Update [dep, dev, peer, all]", "dep")
   .action(applyAction);
 
 //Execute
