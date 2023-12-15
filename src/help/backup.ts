@@ -22,5 +22,5 @@ export const createBackup = (pkgFile: string, pkg: Package, logger: Logger) => {
   }
   const content = JSON.stringify(backup, null, 2);
   writeFileSync(backupFile, content);
-  logger.info(`Backup in ${backupFile}`);
+  logger.info(`BACKUP : ${backupFile}`);
 };

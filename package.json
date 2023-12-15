@@ -8,7 +8,7 @@
     "dep-force": "bin/main.js"
   },
   "scripts": {
-    "dev": "node --loader ts-node/register ./src/main.ts",
+    "dev": "node --loader ts-node/esm ./src/main.ts",
     "build": "tsup ./src/main.ts"
   },
   "devDependencies": {

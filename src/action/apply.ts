@@ -45,15 +45,18 @@ const createCommand = (
   return `${command} ${nameList.join(" ")}`;
 };
 
-const executeCommand = (commands: string | string[]) => {
+const executeCommand = (commands: string | string[], logger: Logger) => {
   commands = Array.isArray(commands) ? commands : [commands];
   commands.forEach((command) => {
+    logger.info(`EXECUTE: ${command}`);
     const spinner = ora(command).start();
     try {
       execSync(command);
       spinner.succeed();
+      logger.info(`SUCCESS: ${command}\n`);
     } catch (error: any) {
-      spinner.fail(error.message);
+      spinner.fail(`ERROR : ${error.message}`);
+      logger.error(`ERROR : ${command}, cause: ${error.message}\n`);
     }
   });
 };
@@ -78,9 +81,11 @@ export const applyAction = (opts: ApplyOptions) => {
   const { directory, manager, outFile, scope } = opts;
   const logger = createLogger({ outFile });
   try {
-    logger.info(`Scan: ${directory}`);
+    logger.info(`ROOT   : ${directory}`);
 
     const [pkgFile, pkg] = getPackageInfo(directory);
+
+    logger.info(`FILE   : ${pkgFile}`);
 
     createBackup(pkgFile, pkg, logger);
 
@@ -88,27 +93,30 @@ export const applyAction = (opts: ApplyOptions) => {
 
     const removeNames = dependencies.map((it) => it.name).join(" ");
     const removeAllCommand = createCommand(manager, "remove", removeNames);
-    logger.info(`REMOVE: ${removeNames}`);
-    executeCommand(removeAllCommand);
+
+    logger.info(`REMOVE : ${removeNames}\n`);
+    executeCommand(removeAllCommand, logger);
 
     const depNames = dependencies
       .filter((it) => it.origin === "dep")
       .map((it) => it.name);
-    logger.info(`ADD: ${depNames}`);
+
+    logger.info(`ADD    : ${depNames.join(" ")}\n`);
     const addDepCommands = depNames.map((name) =>
       createCommand(manager, "dep", name)
     );
-    executeCommand(addDepCommands);
+    executeCommand(addDepCommands, logger);
 
     const devNames = dependencies
       .filter((it) => it.origin === "dev")
       .map((it) => it.name);
-    logger.info(`ADD DEV: ${depNames}`);
+
+    logger.info(`ADD DEV: ${depNames.join(" ")}\n`);
     const addDevCommands = devNames.map((name) =>
       createCommand(manager, "dev", name)
     );
-    executeCommand(addDevCommands);
+    executeCommand(addDevCommands, logger);
   } catch (error: any) {
-    logger.error(`ERROR: ${error.message}`);
+    logger.error(`ERROR  : ${error.message}`);
   }
 };
