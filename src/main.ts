@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { program } from "commander";
 import { applyAction } from "./action/apply";
 import { version, name, description } from "../package.json";

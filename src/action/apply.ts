@@ -64,11 +64,11 @@ const executeCommand = (commands: string | string[], logger: Logger) => {
 const getPackageInfo = (directory: string): [string, Package] => {
   const pkgFile = findPackageJson(directory);
   if (!pkgFile) {
-    throw new Error(`<<package.json>> no encontrado`);
+    throw new Error(`<package.json> not found`);
   }
   const pkg = loadPackageJson(pkgFile);
   if (!pkg) {
-    throw new Error(`<<package.json>> no se pudo leer: ${pkgFile}`);
+    throw new Error(`Unable to read <package.json>: ${pkgFile}`);
   }
   return [pkgFile, pkg];
 };

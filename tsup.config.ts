@@ -3,7 +3,7 @@ import { defineConfig } from "tsup";
 export default defineConfig([
   {
     entry: ["src/main.ts"],
-    format: ["cjs"],
+    format: ["esm"],
     outDir: "bin",
     external: ["path", "fs"],
     dts: {

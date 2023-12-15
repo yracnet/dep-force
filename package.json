@@ -1,11 +1,47 @@
 {
   "name": "up-force",
-  "description": "",
-  "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
+  "description": "A tool for upgrading project dependencies, ignoring advisories.",
+  "main": "./bin/main.js",
   "bin": {
-    "up-force": "bin/main.js"
+    "up-force": "./bin/main.js"
+  },
+  "keywords": [
+    "install",
+    "modules",
+    "package manager",
+    "package.json",
+    "upgrade",
+    "dependencies",
+    "ignore-advisories",
+    "yarn upgrade",
+    "npm upgrade",
+    "yarn add",
+    "npm add"
+  ],
+  "files": [
+    "bin",
+    "index.js",
+    "client.d.ts",
+    "LICENSE"
+  ],
+  "license": "MIT",
+  "author": "Willyams Yujra <yracnet@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yracnet/up-force"
+  },
+  "homepage": "https://github.com/yracnet/up-force",
+  "bugs": "https://github.com/yracnet/up-force/issues",
+  "exports": {
+    ".": [
+      {
+        "default": "./index.js"
+      },
+      "./index.js"
+    ],
+    "./package.json": "./package.json"
   },
   "scripts": {
     "dev": "node --loader ts-node/esm ./src/main.ts",
