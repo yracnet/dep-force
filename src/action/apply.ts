@@ -9,6 +9,7 @@ import {
 import { createLogger, Logger } from "../help/logger.ts";
 import { execSync } from "child_process";
 import { createBackup } from "../help/backup.ts";
+import ora from "ora";
 
 type ApplyOptions = {
   directory: string;
@@ -44,14 +45,15 @@ const createCommand = (
   return `${command} ${nameList.join(" ")}`;
 };
 
-const executeCommands = (commands: string | string[], logger: Logger) => {
+const executeCommand = (commands: string | string[]) => {
   commands = Array.isArray(commands) ? commands : [commands];
   commands.forEach((command) => {
+    const spinner = ora(command).start();
     try {
-      logger.info(`Ejecutando: ${command}`);
-      execSync(command, { stdio: "inherit" });
-    } catch (error) {
-      logger.error(`ERROR: ${command}`, error);
+      execSync(command);
+      spinner.succeed();
+    } catch (error: any) {
+      spinner.fail(error.message);
     }
   });
 };
@@ -87,25 +89,25 @@ export const applyAction = (opts: ApplyOptions) => {
     const removeNames = dependencies.map((it) => it.name).join(" ");
     const removeAllCommand = createCommand(manager, "remove", removeNames);
     logger.info(`REMOVE: ${removeNames}`);
-    executeCommands(removeAllCommand, logger);
+    executeCommand(removeAllCommand);
 
     const depNames = dependencies
       .filter((it) => it.origin === "dep")
       .map((it) => it.name);
+    logger.info(`ADD: ${depNames}`);
     const addDepCommands = depNames.map((name) =>
       createCommand(manager, "dep", name)
     );
-    logger.info(`ADD: ${depNames}`);
-    executeCommands(addDepCommands, logger);
+    executeCommand(addDepCommands);
 
     const devNames = dependencies
       .filter((it) => it.origin === "dev")
       .map((it) => it.name);
+    logger.info(`ADD DEV: ${depNames}`);
     const addDevCommands = devNames.map((name) =>
       createCommand(manager, "dev", name)
     );
-    logger.info(`ADD DEV: ${depNames}`);
-    executeCommands(addDevCommands, logger);
+    executeCommand(addDevCommands);
   } catch (error: any) {
     logger.error(`ERROR: ${error.message}`);
   }

@@ -46,7 +46,7 @@ export const loadDependencies = (pkg: any): Dependency[] => {
     });
   };
   const dep1 = create("dep", pkg.dependencies);
-  const dep2 = create("dep", pkg.devDependencies);
-  const dep3 = create("dep", pkg.peerDependencies);
+  const dep2 = create("dev", pkg.devDependencies);
+  const dep3 = create("peer", pkg.peerDependencies);
   return [...dep1, ...dep2, ...dep3];
 };
