@@ -12,6 +12,7 @@ import { createBackup } from "../help/backup.ts";
 import ora from "ora";
 
 type ApplyOptions = {
+  dependencies: string[],
   directory: string;
   manager: "yarn" | "npm" | string;
   outFile: string;
@@ -49,7 +50,7 @@ const executeCommand = (commands: string | string[], logger: Logger) => {
   commands = Array.isArray(commands) ? commands : [commands];
   commands.forEach((command) => {
     logger.info(`EXECUTE: ${command}`);
-    const spinner = ora(command).start();
+    const spinner = ora(`> ${command}\n`).start();
     try {
       execSync(command);
       spinner.succeed();
@@ -78,7 +79,7 @@ const allodDependency = (it: Dependency) => {
 };
 
 export const applyAction = (opts: ApplyOptions) => {
-  const { directory, manager, outFile, scope } = opts;
+  const { directory, manager, outFile, dependencies = [] } = opts;
   const logger = createLogger({ outFile });
   try {
     logger.info(`ROOT   : ${directory}`);
@@ -89,15 +90,18 @@ export const applyAction = (opts: ApplyOptions) => {
 
     createBackup(pkgFile, pkg, logger);
 
-    const dependencies = loadDependencies(pkg).filter(allodDependency);
+    const pkgDependencies = loadDependencies(pkg)
+                            .filter(allodDependency)
+                            .filter(it => dependencies.length === 0 || dependencies.some(d => d === it.name));
 
-    const removeNames = dependencies.map((it) => it.name).join(" ");
+    const removeNames = pkgDependencies.map((it) => it.name)
+    .join(" ");
     const removeAllCommand = createCommand(manager, "remove", removeNames);
 
     logger.info(`REMOVE : ${removeNames}\n`);
     executeCommand(removeAllCommand, logger);
 
-    const depNames = dependencies
+    const depNames = pkgDependencies
       .filter((it) => it.origin === "dep")
       .map((it) => it.name);
 
@@ -107,7 +111,7 @@ export const applyAction = (opts: ApplyOptions) => {
     );
     executeCommand(addDepCommands, logger);
 
-    const devNames = dependencies
+    const devNames = pkgDependencies
       .filter((it) => it.origin === "dev")
       .map((it) => it.name);
 

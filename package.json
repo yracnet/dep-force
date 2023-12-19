@@ -1,6 +1,6 @@
 {
   "name": "up-force",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "description": "A tool for upgrading project dependencies, ignoring advisories.",
   "main": "./bin/main.js",
@@ -52,7 +52,7 @@
   },
   "peerDependencies": {},
   "dependencies": {
-    "@types/node": "^20.10.4",
+    "@types/node": "^20.10.5",
     "commander": "^11.1.0",
     "ora": "^7.0.1",
     "tsup": "^8.0.1",

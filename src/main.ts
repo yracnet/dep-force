@@ -16,6 +16,10 @@ program
     "yarn"
   )
   .option(
+    "-d, --dependencies <dependencies...>",
+    "Specify the dependencies names to upgrade.",
+  )
+  .option(
     "-o, --outFile <outFile>",
     "Specify the output file for logging (optional).",
     ""
